@@ -1,0 +1,17 @@
+<% include partials/header %>
+<% include partials/nav %>
+
+<h1 class="text-center">State Parks</h1>
+
+
+
+    <% stateParks.forEach( park => { %>
+        <div>
+          <h4><%= park.name %></h4>
+            <img src='<%= park.image %>'>  
+        </div>
+        
+    <% }); %> 
+    
+
+<% include partials/footer %>
