@@ -1,37 +1,38 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const stateParksArray = [
-        {name: 'Choke Canyon State Park', image: 'http://photos1.blogger.com/blogger/4619/1296/1600/RockingChair11.jpg'}, 
-        {name: 'Government Canyon State Natural Area', image: 'https://s3-media2.fl.yelpcdn.com/bphoto/5a6kw4QcOZLbgewzurPNGQ/348s.jpg'},  
-        {name: "Devil's Sinkhole State Natural Area", image: 'https://texashillcountry.com/wp-content/uploads/Sinkhole-bats-2.jpg'},  
-    ];
-
-app.use(bodyParser.urlencoded({extended: true}));
+const campgrounds = [
+            {name: 'campground1', image: 'https://farm2.staticflickr.com/1424/1430198323_c26451b047.jpg' },
+            {name: 'campground2', image: 'https://farm1.staticflickr.com/82/225912054_690e32830d.jpg' },
+            {name: 'campground3', image: 'https://farm6.staticflickr.com/5108/5789045796_27c9217bf2.jpg' }
+        ];
+        
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
-
+app.use(bodyParser.urlencoded({extended: true}));
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('landing');
 });
 
-app.post('/stateParks', (req, res) => {
-    let newPark = {
-        name: req.body.newFriend, 
-        image: req.body.newImage
-    }
-    console.log(newPark);
-    console.log(stateParksArray)
+app.get('/campgrounds', (req, res) => {
+    res.render('campgrounds', {campgrounds: campgrounds});
+});
+
+app.post('/campgrounds', (req, res) => {
+    // get data from the form and add it the campgrounds array
+    // redirect back to the campgrounds page
+    let name = req.body.name;
+    let image = req.body.image;
+    let newCampground = {
+        name: name,
+        image: image
+    };
     
+    campgrounds.push(newCampground);
+    res.redirect('/campgrounds');
 });
 
-app.get('/stateParks', (req, res) => {
-    res.render('stateParks', {stateParks: stateParksArray});
-});
-
-app.get('/stateParks/new', (req, res) => {
-    res.render('new');
+app.get('/campgrounds/new', (req, res) => {
+    res.render('new.ejs');
 })
 
-
-app.listen(process.env.PORT, process.env.IP, () => console.log('Server is spinning'));
+app.listen(process.env.PORT, process.env.IP, () => console.log('Yelp Camp is running'));
