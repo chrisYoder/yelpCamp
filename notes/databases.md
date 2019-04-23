@@ -13,7 +13,7 @@
 * SQL
   *  relational
   *  we define tables ahead of time and then must follow those tables
-  *  
+  
 * NoSQL
   * non-relational
     * we don't need to define tables ahead of tieme
@@ -29,4 +29,12 @@
 * find
 * update
 * remove
-  * bottom four are most important
+* bottom four are most important
+  
+ 
+### CRUD
+* C --> Create (insert)
+* R --> Read (find)
+* U --> Update (update)
+* D --> Delete (remove)
+
