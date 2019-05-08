@@ -5,12 +5,14 @@ const express               = require('express'),
       passport              = require('passport'),
       LocalStrategy         = require('passport-local'),
       passportLocalMongoose = require('passport-local-mongoose'),
-      // session               = require('express-session'),
-      Campground            = require('./models/campground'),
-      Comment               = require('./models/comment'),
-      User                  = require('./models/user'),
-      seedDB                = require('./seeds'),
-      campgroundRoutes      = require('./routes/campgrounds'),
+      Campground            = require('./models/campgroundModel'),
+      Comment               = require('./models/commentModel'),
+      User                  = require('./models/userModel');
+    //   seedDB                = require('./seeds');
+      
+      
+// requiring routes 
+const campgroundRoutes      = require('./routes/campgrounds'),
       commentRoutes         = require('./routes/comments'),
       indexRoutes           = require('./routes/index');
       
@@ -20,7 +22,7 @@ mongoose.connect('mongodb://localhost:27017/yelp_camp', { useNewUrlParser: true}
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
-seedDB();
+// seedDB();
 
 
 // Passport config
@@ -41,15 +43,16 @@ app.use((req, res, next)=>{
   res.locals.currentUser = req.user;
   next();
 })
-app.get('/', (req, res) => {
+
+app.get('', (req, res) => {
   res.render('campgrounds/landing');
 });
 
-// 10:53
+
 
 app.use(indexRoutes);
-app.use(commentRoutes);
-app.use(campgroundRoutes);
+app.use('/campgrounds/:id/comments', commentRoutes);
+app.use('/campgrounds', campgroundRoutes);
 
 
 

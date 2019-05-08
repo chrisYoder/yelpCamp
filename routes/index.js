@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const User = require('../models/user');
+const User = require('../models/userModel');
 
 // ============
 // Auth Routes
 // ============
+
 router.get('/', (req, res) => {
   res.render('campgrounds/landing');
 });
@@ -44,9 +45,9 @@ router.post('/login', passport.authenticate('local', {
   
 });
   
-// ============
-// login Routes
-// ============  
+// =============
+// logout Routes
+// ============= 
 
 router.get('/logout', (req, res) => {
   req.logout();

@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const Campground = require('../models/campground');
+const Campground = require('../models/campgroundModel');
+const isLoggedIn = require('../public/javascript/isLoggedIn');
+
 
 
 // INDEX - show all campgrounds
-router.get('/campgrounds', (req, res) => {
+router.get('', (req, res) => {
   // res.render('campgrounds', { campgrounds: campgrounds });
   // get all campgrounds from dv
   
@@ -18,38 +20,39 @@ router.get('/campgrounds', (req, res) => {
 });
 
 // CREATE --> adds new campground to the db
-router.post('/campgrounds', (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
   // get data from the form and add it the campgrounds array
   // redirect back to the campgrounds page
   let name = req.body.name;
   let image = req.body.image;
   let description = req.body.desc;
+  let user = req.user.username;
+  
   let newCampground = {
     name: name,
     image: image,
-    description: description
+    description: description,
+    user: user,
   };
 
   Campground.create(newCampground, (err, newCampground) => {
     if(err){
       console.log(err);
     }else{
-      res.redirect('/campgrounds');
+      res.redirect('');
     }
   });
 });
 
 
 
-//  NEW --> show from to create new campground
-router.get('/campgrounds/new', (req, res) => {
+//  NEW 
+router.get('/new', isLoggedIn, (req, res) => {
   res.render('campgrounds/new');
 });
 
-// SHOW --> show more info about one campground
-router.get('/campgrounds/:id', (req, res) => {
-  // FIND THE CAMPGROUND WITH PROVIDED ID
-  // RENDER THE SHOW TEMPLATE WITH THAT CAMPGROUND
+// SHOW 
+router.get('/:id', (req, res) => {
   let id = req.params.id;
   Campground.findById(id).populate('comments').exec( (err, campground) => {
     if(err){

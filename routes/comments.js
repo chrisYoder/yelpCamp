@@ -1,13 +1,14 @@
 const express = require('express');
-const router = express.Router();
-const Campground = require('../models/campground');
-const Comment = require('../models/comment');
+const router = express.Router({mergeParams: true});
+const Campground = require('../models/campgroundModel');
+const Comment = require('../models/commentModel');
+const isLoggedIn = require('../public/javascript/isLoggedIn');
 
 // ==========================
 // COMMENT ROUTES
 // ==========================
 
-router.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
   Campground.findById(req.params.id, (err, campground) => {
     if(err) {
       console.log(err);
@@ -17,7 +18,7 @@ router.get('/campgrounds/:id/comments/new', isLoggedIn, (req, res) => {
   });
 });
 
-router.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
+router.post('/', isLoggedIn, (req, res) => {
    //lookup campground using ID
    Campground.findById(req.params.id, function(err, campground){
        if(err){
@@ -28,6 +29,11 @@ router.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
            if(err){
                console.log(err);
            } else {
+               //add un and id to comment
+               comment.author.id = req.user._id;
+               comment.author.username = req.user.username;
+               comment.save();
+               //save comment
                campground.comments.push(comment);
                campground.save();
                res.redirect('/campgrounds/' + campground._id);
@@ -35,19 +41,11 @@ router.post("/campgrounds/:id/comments", isLoggedIn, (req, res) => {
         });
        }
    });
-   //create new comment
-   //connect new comment to campground
-   //redirect campground show page
+   
 });
 
 
-function isLoggedIn(req, res, next){
-  if(req.isAuthenticated()){
-    return next();
-  }else{
-    res.redirect('/login');
-  }
-}
+
 
 
 module.exports = router;
