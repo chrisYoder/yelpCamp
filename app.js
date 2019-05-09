@@ -7,7 +7,8 @@ const express               = require('express'),
       passportLocalMongoose = require('passport-local-mongoose'),
       Campground            = require('./models/campgroundModel'),
       Comment               = require('./models/commentModel'),
-      User                  = require('./models/userModel');
+      User                  = require('./models/userModel'),
+      methodOverride        = require('method-override');
     //   seedDB                = require('./seeds');
       
       
@@ -37,6 +38,7 @@ app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+app.use(methodOverride('_method'));
 
 
 app.use((req, res, next)=>{
