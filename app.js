@@ -8,6 +8,8 @@ const express               = require('express'),
       Campground            = require('./models/campgroundModel'),
       Comment               = require('./models/commentModel'),
       User                  = require('./models/userModel'),
+      Review                = require('./models/reviewModel'),
+      flash                 = require('connect-flash'),
       methodOverride        = require('method-override');
     //   seedDB                = require('./seeds');
       
@@ -15,6 +17,7 @@ const express               = require('express'),
 // requiring routes 
 const campgroundRoutes      = require('./routes/campgrounds'),
       commentRoutes         = require('./routes/comments'),
+      reviewRoutes          = require('./routes/reviews'),
       indexRoutes           = require('./routes/index');
       
 
@@ -25,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/public'));
 // seedDB();
 
-
+app.use(flash());
 // Passport config
 app.use(require('express-session')({
     secret: 'The most important step is the next one',
@@ -43,8 +46,11 @@ app.use(methodOverride('_method'));
 
 app.use((req, res, next)=>{
   res.locals.currentUser = req.user;
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  res.locals.moment = require('moment');
   next();
-})
+});
 
 app.get('', (req, res) => {
   res.render('campgrounds/landing');
@@ -55,7 +61,7 @@ app.get('', (req, res) => {
 app.use(indexRoutes);
 app.use('/campgrounds/:id/comments', commentRoutes);
 app.use('/campgrounds', campgroundRoutes);
-
+app.use("/campgrounds/:id/reviews", reviewRoutes);
 
 
 

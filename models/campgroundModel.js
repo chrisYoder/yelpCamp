@@ -1,8 +1,12 @@
-const mongoose = require('mongoose');
+const   mongoose = require('mongoose'),
+        Comment = require('./commentModel'),
+        Review = require('./reviewModel');
 
 
 const campgroundSchema = new mongoose.Schema({
     name: String, 
+    price: String, 
+    createdAt: {type: Date, default: Date.now},
     image: String, 
     description: String, 
     author: {
@@ -18,7 +22,19 @@ const campgroundSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Comment'
         }
-    ]
+    ], 
+    
+    reviews: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Review'
+        }    
+    ], 
+    
+    rating: {
+        type: Number,
+        default: 0
+    }
 });
 
  
