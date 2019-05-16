@@ -2,9 +2,8 @@ const express     = require('express'),
       router      = express.Router(),
       Campground  = require('../models/campgroundModel'),
       middleware  = require('../middleware/index.js'),
-      Comment     = require('../models/commentModel'),
-      Review      = require('../models/reviewModel');
-
+      Comment     = require('../models/commentModel');
+     
 
 
 
@@ -92,15 +91,6 @@ router.delete('/:id', middleware.checkCampgroundOwnership, (req, res) => {
           console.log(err);
           return res.redirect('/campgrounds');
         }
-        
-        Review.remove({'_id': {$in: campground.reviews}}, (err) => {
-          if(err) {
-            console.log(err);
-            return res.redirect('/campgrounds');
-          }
-          campground.remove();
-          req.flash('success', 'Campground deleted successfully');
-        });
       });
     }
   });
