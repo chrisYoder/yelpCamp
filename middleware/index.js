@@ -55,47 +55,6 @@ middlewareObject.isLoggedIn = function (req, res, next) {
   req.isAuthenticated() ? next() : (req.flash('error', 'You need to be logged in to do that'), res.redirect('/login'));
 };
 
-middlewareObject.checkReviewOwnership = function(req, res, next) {
-  if(req.isAuthenticated()) {
-    Review.findById(req.params.review_id, (err, foundReview) => {
-      if(err || !foundReview) {
-        res.redirect('back');
-      } else {
-        if(foundReview.author.id.equals(req.user._id)) {
-          next();
-        } else {
-          req.flash('error', `You don't have permission to do that.`);
-          res.redirect('back');
-        }
-      }
-    });
-  } else {
-    req.glash('error', 'You need to be logged in to do that');
-    res.redirect('back');
-  }
-};
 
-middlewareObject.checkReviewExistence = function(req, res, next){
-  if(req.isAuthenticated){
-    Campground.findById(req.params.id).populate('reviews').exec( (err, foundCampground) => {
-      if(err) {
-        req.flash('error', 'Campground not found');
-        res.redirect('back');
-      } else {
-        let foundUserReview = foundCampground.reviews.some( review => {
-          return review.author.id.equals(req.user._id);
-        });
-        if(foundUserReview) {
-          req.flash('error', 'You already wrote a review');
-          return res.redirect('back');
-        }
-        next();
-      }
-    });
-  } else {
-    req.flash('error', 'You need to be logged in first');
-    res.redirect('back');
-  }
-};
 
 module.exports = middlewareObject;
